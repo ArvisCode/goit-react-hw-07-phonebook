@@ -1,14 +1,11 @@
-import { useSelector } from 'react-redux';
 import { Container } from './Container/Container';
 import { ContactForm } from './ContactForm/ContactForm';
-import { getContacts } from 'redux/contactSlise';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
+import { useGetContactsQuery } from 'redux/contactApi';
 
 export const App = () => {
-  const contacts = useSelector(getContacts);
-  console.log(contacts);
-
+  const { data = [] } = useGetContactsQuery();
   return (
     <>
       <Container title="Phonebook">
@@ -17,7 +14,7 @@ export const App = () => {
 
       <Container title="Contacts">
         <Filter />
-        {contacts.length > 0 ? <ContactList /> : null}
+        {data ? <ContactList /> : <p>Contact list is empty.</p>}
       </Container>
     </>
   );

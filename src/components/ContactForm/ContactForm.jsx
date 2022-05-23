@@ -1,36 +1,30 @@
-import { useState } from 'react';
 import { Label, Title, Input, Button } from './ContactForm.styled';
-import { useSelector, useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
-import { addContact, getContacts } from 'redux/contactSlise';
+import {
+  useGetContactsQuery,
+  useAddContactMutation,
+} from '../../redux/contactApi';
 import { Report } from 'notiflix';
+import { useState } from 'react';
 
 export const ContactForm = () => {
+  //===============
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
   const onChangeName = e => setName(e.currentTarget.value);
   const onChangeNumber = e => setNumber(e.currentTarget.value);
+  //=============
 
-  const contacts = useSelector(getContacts);
-  const dispach = useDispatch();
+  const { data: contacts } = useGetContactsQuery();
+  const [newContact] = useAddContactMutation();
 
-  const onSubmitForm = e => {
-    e.preventDefault();
-
-    const newContact = {
-      id: nanoid(),
-      name,
-      number,
-    };
-
+  const onSubmitForm = ({ name, number }) => {
     contacts.some(contact => contact.name === name)
       ? Report.warning(
           `${name}`,
           'This user is already in the contact list.',
           'OK'
         )
-      : dispach(addContact(newContact));
+      : newContact({ name, number });
 
     resetForm();
   };

@@ -1,38 +1,44 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { getFilter } from 'redux/selectors';
 import { Contact } from 'components/Contact/Contact';
-import { deleteContact, getFilter, getContacts } from 'redux/contactSlise';
+import {
+  useGetContactsQuery,
+  useDeleteContactMutation,
+} from 'redux/contactApi';
 import { Item } from './ContactList.styled';
 
 export const ContactList = () => {
-  const filterValue = useSelector(getFilter);
-  const contacts = useSelector(getContacts);
-  const dispatch = useDispatch();
-  const deleteSelectedContact = contactID => dispatch(deleteContact(contactID));
+  const { data = [] } = useGetContactsQuery();
+  console.log(data);
+  const { filter } = useSelector(state => getFilter(state));
 
-  const contactsFilter = () => {
-    const filterNormalize = filterValue.toLowerCase();
+  const [deleteContact] = useDeleteContactMutation();
+  const onDeleteContact = id => deleteContact(id);
 
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filterNormalize)
+  const filteredContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
+    return data.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
-  const filtredContacts = contactsFilter();
+  const filtredContacts = filteredContacts();
 
   return (
     <ul>
-      {filtredContacts.map(({ id, name, number }) => {
-        return (
-          <Item key={id}>
-            <Contact
-              name={name}
-              number={number}
-              onDeleteContact={() => deleteSelectedContact(id)}
-              contactID={id}
-            />
-          </Item>
-        );
-      })}
+      {data &&
+        filtredContacts.map(({ id, name, number }) => {
+          return (
+            <Item key={id}>
+              <Contact
+                name={name}
+                number={number}
+                onDeleteContact={onDeleteContact}
+                id={id}
+              />
+            </Item>
+          );
+        })}
     </ul>
   );
 };
