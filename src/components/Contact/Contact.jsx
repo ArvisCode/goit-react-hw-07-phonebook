@@ -3,7 +3,7 @@ import { Wrapper, Icon, Number, Button } from './Contact.styled';
 import { FaUser } from 'react-icons/fa';
 import { TiDelete } from 'react-icons/ti';
 
-export const Contact = ({ name, number, onDeleteContact }) => {
+export const Contact = ({ id, name, number, onDeleteContact }) => {
   return (
     <>
       <Wrapper>
@@ -14,7 +14,7 @@ export const Contact = ({ name, number, onDeleteContact }) => {
       </Wrapper>
       <Wrapper>
         <Number>{number}</Number>
-        <Button type="button" onClick={onDeleteContact}>
+        <Button type="button" onClick={() => onDeleteContact(id)}>
           <TiDelete size="50px" />
         </Button>
       </Wrapper>

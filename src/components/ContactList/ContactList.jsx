@@ -8,9 +8,8 @@ import {
 import { Item } from './ContactList.styled';
 
 export const ContactList = () => {
-  const { data = [] } = useGetContactsQuery();
-  console.log(data);
-  const { filter } = useSelector(state => getFilter(state));
+  const { data } = useGetContactsQuery();
+  const filter = useSelector(getFilter);
 
   const [deleteContact] = useDeleteContactMutation();
   const onDeleteContact = id => deleteContact(id);
@@ -22,12 +21,12 @@ export const ContactList = () => {
     );
   };
 
-  const filtredContacts = filteredContacts();
+  const filteredContactsList = filteredContacts();
 
   return (
-    <ul>
-      {data &&
-        filtredContacts.map(({ id, name, number }) => {
+    data && (
+      <ul>
+        {filteredContactsList.map(({ id, name, number }) => {
           return (
             <Item key={id}>
               <Contact
@@ -39,6 +38,7 @@ export const ContactList = () => {
             </Item>
           );
         })}
-    </ul>
+      </ul>
+    )
   );
 };

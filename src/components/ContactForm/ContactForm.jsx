@@ -4,27 +4,34 @@ import {
   useAddContactMutation,
 } from '../../redux/contactApi';
 import { Report } from 'notiflix';
+import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
 export const ContactForm = () => {
-  //===============
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const onChangeName = e => setName(e.currentTarget.value);
   const onChangeNumber = e => setNumber(e.currentTarget.value);
-  //=============
 
   const { data: contacts } = useGetContactsQuery();
   const [newContact] = useAddContactMutation();
 
-  const onSubmitForm = ({ name, number }) => {
-    contacts.some(contact => contact.name === name)
-      ? Report.warning(
-          `${name}`,
-          'This user is already in the contact list.',
-          'OK'
-        )
-      : newContact({ name, number });
+  const onSubmitForm = async e => {
+    e.preventDefault();
+
+    if (
+      contacts.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      Report.warning(
+        `${name}`,
+        'This user is already in the contact list.',
+        'OK'
+      );
+      return;
+    }
+    await newContact({ id: nanoid(), name, number });
 
     resetForm();
   };

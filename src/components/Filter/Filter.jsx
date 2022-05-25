@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { changeFilter } from 'redux/contactsSlise';
+import { changeFilter } from 'redux/contactsSlice';
 import { Label, Text, Input } from './Filter.styled';
 
 export const Filter = () => {

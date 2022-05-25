@@ -5,7 +5,7 @@ import { ContactList } from './ContactList/ContactList';
 import { useGetContactsQuery } from 'redux/contactApi';
 
 export const App = () => {
-  const { data = [] } = useGetContactsQuery();
+  const { data } = useGetContactsQuery();
   return (
     <>
       <Container title="Phonebook">
